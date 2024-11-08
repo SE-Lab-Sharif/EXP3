@@ -18,8 +18,8 @@ public class UserService {
         return userByUsername.getPassword().equals(password);
     }
 
-    public boolean loginWithEmail(String username, String password) {
-        // TODO: implement login with email. return true if username and password are valid.
+    public boolean loginWithEmail(String email, String password) {
+        // TODO: implement login with email. return true if email and password are valid.
         return false;
     }
 
