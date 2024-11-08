@@ -51,12 +51,17 @@ public class UserService {
     }
 
     public int getUserCount() {
-        //Should return this.repository.getUserCount();
+        // TODO: Should return this.repository.getUserCount();
         return 0;
     }
 
     public User getUserByUsername(String username) {
-        //Should return this.repository.getUserByUsername(username);
+        // TODO: Should return this.repository.getUserByUsername(username);
+        return null;
+    }
+
+    public User getUserByEmail(String email) {
+        // TODO: Should return this.repository.getUserByEmail(email);
         return null;
     }
 
