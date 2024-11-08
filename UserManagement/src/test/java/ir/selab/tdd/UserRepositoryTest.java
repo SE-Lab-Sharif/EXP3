@@ -18,7 +18,7 @@ public class UserRepositoryTest {
         List<User> userList = Arrays.asList(
                 new User("admin", "1234"),
                 new User("ali", "qwert"),
-                new User("mohammad", "123asd"));
+                new User("mohammad", "123asd", "moh@gmail.com"));
         repository = new UserRepository(userList);
     }
 
