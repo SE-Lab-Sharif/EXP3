@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public boolean removeUser(String username) {
-        // TODO: implement
+        // TODO: implement: remove user from repository. Return true if successful, otherwise false.
         return false;
     }
 
@@ -49,4 +49,15 @@ public class UserService {
         // TODO: after changing user's email, user must be able to login with new email.
         return false;
     }
+
+    public int getUserCount() {
+        //Should return this.repository.getUserCount();
+        return 0;
+    }
+
+    public User getUserByUsername(String username) {
+        //Should return this.repository.getUserByUsername(username);
+        return null;
+    }
+
 }
