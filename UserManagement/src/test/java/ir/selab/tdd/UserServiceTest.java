@@ -19,6 +19,7 @@ public class UserServiceTest {
         userService = new UserService(userRepository);
         userService.registerUser("admin", "1234");
         userService.registerUser("ali", "qwert");
+        userService.registerUser("hasan", "hasan123@", "hasan@gmail.com");
     }
 
     @Test
@@ -54,4 +55,24 @@ public class UserServiceTest {
         boolean login = userService.loginWithUsername("ahmad", "abcd");
         assertFalse(login);
     }
+
+    @Test
+    public void loginWithValidEmailAndPassword__ShouldSuccess() {
+        boolean login = userService.loginWithEmail("hasan@gmail.com", "hasan123@");
+        assertTrue(login);
+    }
+
+    @Test
+    public void loginWithValidEmailAndInvalidPassword__ShouldFail() {
+        boolean login = userService.loginWithEmail("hasan@gmail.com", "abcd");
+        assertFalse(login);
+    }
+
+    @Test
+    public void loginWithInvalidEmailAndInvalidPassword__ShouldFail() {
+        boolean login = userService.loginWithEmail("admin@admin.edu", "abcd");
+        assertFalse(login);
+    }
+
+
 }
