@@ -88,6 +88,7 @@ public class UserServiceTest {
 
     @Test
     public void removeUserShouldDeleteUserFromRepository() {
+        userService.removeUser("ali");
         assertNull(userService.getUserByUsername("ali"));
     }
 
@@ -99,7 +100,9 @@ public class UserServiceTest {
 
     @Test
     public void afterRemovingAUser__UserCountShouldDecrease() {
-        assertEquals(3, userService.getUserCount());
+        int userCount = userService.getUserCount();
+        userService.removeUser("ali");
+        assertEquals(userService.getUserCount(), userCount - 1);
     }
 
     @Test
@@ -110,6 +113,7 @@ public class UserServiceTest {
 
     @Test
     public void changeUserEmail__CheckEmailIsCreated() {
+        userService.changeUserEmail("admin", "admin@corp.co");
         assertNotNull(userService.getUserByEmail("admin@corp.co"));
     }
 
@@ -121,18 +125,21 @@ public class UserServiceTest {
 
     @Test
     public void changeUserEmail__CheckEmailIsChanged() {
+        userService.changeUserEmail("hasan", "hasan@yahoo.com");
         assertNull(userService.getUserByEmail("hasan@gmail.com"));
         assertNotNull(userService.getUserByEmail("hasan@yahoo.com"));
     }
 
     @Test
     public void changeUserEmail__AfterChange__ShouldBeAbleToLoginWithNewEmail() {
+        userService.changeUserEmail("hasan", "hasan@yahoo.com");
         boolean login = userService.loginWithEmail("hasan@yahoo.com", "hasan123@");
         assertTrue(login);
     }
 
     @Test
     public void changeUserEmail__RepetitiveEmail__ShouldFail() {
+        userService.changeUserEmail("hasan", "hasan@yahoo.com");
         boolean b = userService.changeUserEmail("admin", "hasan@yahoo.com");
         assertFalse(b);
     }
