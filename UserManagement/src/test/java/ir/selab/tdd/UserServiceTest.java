@@ -81,6 +81,12 @@ public class UserServiceTest {
     }
 
     @Test
+    public void removeUser__ShouldFail() {
+        boolean b = userService.removeUser("hasanGholi");
+        assertFalse(b);
+    }
+
+    @Test
     public void removeUserShouldDeleteUserFromRepository() {
         assertNull(userService.getUserByUsername("ali"));
     }
