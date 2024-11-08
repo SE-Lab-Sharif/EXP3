@@ -75,7 +75,7 @@ public class UserRepositoryTest {
 
     @Test
     public void addUserWithDuplicateEmail__ShouldFail() {
-        repository.addUser(new User("reza", "123abc", "reza@sharif.edu"));
+        repository.addUser(new User("reza", "123abcd", "reza@sharif.edu"));
         User user1 = new User("hasanGholi", "gholi1@2", "reza@sharif.edu");
         int prevUserCount = repository.getUserCount();
         boolean b = repository.addUser(user1);
@@ -100,5 +100,4 @@ public class UserRepositoryTest {
         assertFalse(b);
         assertEquals(repository.getUserCount(), prevUserCount);
     }
-
 }
