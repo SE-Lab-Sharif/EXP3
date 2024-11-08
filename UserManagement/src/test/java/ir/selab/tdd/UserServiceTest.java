@@ -88,6 +88,7 @@ public class UserServiceTest {
 
     @Test
     public void removeUserShouldDeleteUserFromRepository() {
+        userService.removeUser("ali");
         assertNull(userService.getUserByUsername("ali"));
     }
 

@@ -4,7 +4,9 @@ import ir.selab.tdd.domain.User;
 import ir.selab.tdd.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserService {
@@ -37,12 +39,12 @@ public class UserService {
 
     public boolean removeUser(String username) {
         // TODO: implement: remove user from repository. Return true if successful, otherwise false.
-        return false;
+        return repository.removeUser(username);
     }
 
     public List<User> getAllUsers() {
         // TODO: implement
-        return null;
+        return repository.getAllUsers();
     }
 
     public boolean changeUserEmail(String username, String newEmail) {
@@ -53,17 +55,17 @@ public class UserService {
 
     public int getUserCount() {
         // TODO: Should return this.repository.getUserCount();
-        return 0;
+        return repository.getUserCount();
     }
 
     public User getUserByUsername(String username) {
         // TODO: Should return this.repository.getUserByUsername(username);
-        return null;
+        return repository.getUserByUsername(username);
     }
 
     public User getUserByEmail(String email) {
         // TODO: Should return this.repository.getUserByEmail(email);
-        return null;
+        return repository.getUserByEmail(email);
     }
 
 }
