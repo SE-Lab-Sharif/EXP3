@@ -96,4 +96,27 @@ public class UserServiceTest {
         assertEquals(3, userService.getUserCount());
     }
 
+    @Test
+    public void changeUserEmail__ShouldCreateNewEmailAddress__IfPrevEmailDoesNotExist() {
+        boolean b = userService.changeUserEmail("admin", "admin@corp.co");
+        assertTrue(b);
+    }
+
+    @Test
+    public void changeUserEmail__CheckEmailIsCreated() {
+        assertNotNull(userService.getUserByEmail("admin@corp.co"));
+    }
+
+    @Test
+    public void changeUserEmail__ShouldChangeEmail__IfPrevEmailExists() {
+        boolean b = userService.changeUserEmail("hasan", "hasan@yahoo.com");
+        assertTrue(b);
+    }
+
+    @Test
+    public void changeUserEmail__CheckEmailIsChanged() {
+        assertNull(userService.getUserByEmail("hasan@gmail.com"));
+        assertNotNull(userService.getUserByEmail("hasan@yahoo.com"));
+    }
+
 }
