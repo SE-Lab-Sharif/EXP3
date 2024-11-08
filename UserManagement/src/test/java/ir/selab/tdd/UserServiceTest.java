@@ -74,5 +74,26 @@ public class UserServiceTest {
         assertFalse(login);
     }
 
+    @Test
+    public void removeUser__ShouldSuccess() {
+        boolean b = userService.removeUser("ali");
+        assertTrue(b);
+    }
+
+    @Test
+    public void removeUserShouldDeleteUserFromRepository() {
+        assertNull(userService.getUserByUsername("ali"));
+    }
+
+    @Test
+    public void removeUserWithInvalidUsername__ShouldFail() {
+        boolean b = userService.removeUser("ahmad");
+        assertFalse(b);
+    }
+
+    @Test
+    public void afterRemovingAUser__UserCountShouldDecrease() {
+        assertEquals(3, userService.getUserCount());
+    }
 
 }
