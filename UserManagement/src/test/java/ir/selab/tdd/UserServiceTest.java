@@ -125,4 +125,17 @@ public class UserServiceTest {
         assertNotNull(userService.getUserByEmail("hasan@yahoo.com"));
     }
 
+    @Test
+    public void changeUserEmail__AfterChange__ShouldBeAbleToLoginWithNewEmail() {
+        boolean login = userService.loginWithEmail("hasan@yahoo.com", "hasan123@");
+        assertTrue(login);
+    }
+
+    @Test
+    public void changeUserEmail__RepetitiveEmail__ShouldFail() {
+        boolean b = userService.changeUserEmail("admin", "hasan@yahoo.com");
+        assertFalse(b);
+    }
+
+
 }
