@@ -18,8 +18,8 @@ public class UserService {
         return userByUsername.getPassword().equals(password);
     }
 
-    public boolean loginWithEmail(String username, String password) {
-        // TODO: implement login with email. return true if username and password are valid.
+    public boolean loginWithEmail(String email, String password) {
+        // TODO: implement login with email. return true if email and password are valid.
         return false;
     }
 
@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public boolean removeUser(String username) {
-        // TODO: implement
+        // TODO: implement: remove user from repository. Return true if successful, otherwise false.
         return false;
     }
 
@@ -49,4 +49,20 @@ public class UserService {
         // TODO: after changing user's email, user must be able to login with new email.
         return false;
     }
+
+    public int getUserCount() {
+        // TODO: Should return this.repository.getUserCount();
+        return 0;
+    }
+
+    public User getUserByUsername(String username) {
+        // TODO: Should return this.repository.getUserByUsername(username);
+        return null;
+    }
+
+    public User getUserByEmail(String email) {
+        // TODO: Should return this.repository.getUserByEmail(email);
+        return null;
+    }
+
 }
