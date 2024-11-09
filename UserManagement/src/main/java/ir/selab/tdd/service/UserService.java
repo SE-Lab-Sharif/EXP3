@@ -4,7 +4,9 @@ import ir.selab.tdd.domain.User;
 import ir.selab.tdd.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserService {
@@ -18,9 +20,9 @@ public class UserService {
         return userByUsername.getPassword().equals(password);
     }
 
-    public boolean loginWithEmail(String username, String password) {
-        // TODO: implement login with email. return true if username and password are valid.
-        return false;
+    public boolean loginWithEmail(String email, String password) {
+        User userByEmail = repository.getUserByEmail(email);
+        return userByEmail != null && userByEmail.getPassword().equals(password);
     }
 
     public boolean registerUser(String username, String password) {
@@ -35,18 +37,36 @@ public class UserService {
     }
 
     public boolean removeUser(String username) {
-        // TODO: implement
-        return false;
+        return repository.removeUser(username);
     }
 
     public List<User> getAllUsers() {
-        // TODO: implement
-        return null;
+        return repository.getAllUsers();
     }
 
     public boolean changeUserEmail(String username, String newEmail) {
         // TODO: implement (if user exists and user's email is valid, then change email)
         // TODO: after changing user's email, user must be able to login with new email.
-        return false;
+        User user = repository.getUserByUsername(username);
+        if (user == null || repository.getUserByEmail(newEmail) != null) {
+            return false;
+        }
+        repository.removeUser(username);
+        user.setEmail(newEmail);
+        repository.addUser(user);
+        return true;
     }
+
+    public int getUserCount() {
+        return repository.getUserCount();
+    }
+
+    public User getUserByUsername(String username) {
+        return repository.getUserByUsername(username);
+    }
+
+    public User getUserByEmail(String email) {
+        return repository.getUserByEmail(email);
+    }
+
 }

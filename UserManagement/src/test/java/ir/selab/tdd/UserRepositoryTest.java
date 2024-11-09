@@ -18,7 +18,7 @@ public class UserRepositoryTest {
         List<User> userList = Arrays.asList(
                 new User("admin", "1234"),
                 new User("ali", "qwert"),
-                new User("mohammad", "123asd"));
+                new User("mohammad", "123asd", "moh@gmail.com"));
         repository = new UserRepository(userList);
     }
 
@@ -60,5 +60,44 @@ public class UserRepositoryTest {
 
         // Then
         assertEquals(oldUserCount + 1, repository.getUserCount());
+    }
+
+    @Test
+    public void getUserByEmail__ShouldSuccess() {
+        repository.addUser(new User("reza", "123abc", "reza@sharif.edu"));
+        assertNotNull(repository.getUserByEmail("reza@sharif.edu"));
+    }
+
+    @Test
+    public void getUserByEmail__ShouldFail() {
+        assertNull(repository.getUserByEmail("hasanGholi@sharif.edu"));
+    }
+
+    @Test
+    public void addUserWithDuplicateEmail__ShouldFail() {
+        repository.addUser(new User("reza", "123abcd", "reza@sharif.edu"));
+        User user1 = new User("hasanGholi", "gholi1@2", "reza@sharif.edu");
+        int prevUserCount = repository.getUserCount();
+        boolean b = repository.addUser(user1);
+        assertFalse(b);
+        assertEquals(repository.getUserByEmail("reza@sharif.edu").getUsername(), "reza");
+        assertEquals(repository.getUserCount(), prevUserCount);
+    }
+
+    @Test
+    public void removeUser__ShouldSuccess() {
+        int prevUserCount = repository.getUserCount();
+        boolean b = repository.removeUser("ali");
+        assertTrue(b);
+        assertEquals(repository.getUserCount(), prevUserCount - 1);
+        assertNull(repository.getUserByUsername("ali"));
+    }
+
+    @Test
+    public void removeUser__ShouldFail() {
+        int prevUserCount = repository.getUserCount();
+        boolean b = repository.removeUser("hasanGholi");
+        assertFalse(b);
+        assertEquals(repository.getUserCount(), prevUserCount);
     }
 }
