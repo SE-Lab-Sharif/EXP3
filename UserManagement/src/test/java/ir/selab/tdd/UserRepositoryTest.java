@@ -18,9 +18,11 @@ public class UserRepositoryTest {
         List<User> userList = Arrays.asList(
                 new User("admin", "1234"),
                 new User("ali", "qwert"),
-                new User("mohammad", "123asd", "moh@gmail.com"));
+                new User("hasan", "hasan123@", "hasan@gmail.com")
+        );
         repository = new UserRepository(userList);
     }
+
 
     @Test
     public void getContainingUser__ShouldReturn() {
@@ -99,5 +101,137 @@ public class UserRepositoryTest {
         boolean b = repository.removeUser("hasanGholi");
         assertFalse(b);
         assertEquals(repository.getUserCount(), prevUserCount);
+    }
+
+    // Equals Tests
+    @Test
+    public void testEquals_SameObject_ShouldReturnTrue() {
+        User user = new User("testuser", "password", "test@example.com");
+        assertTrue(user.equals(user));
+    }
+
+    @Test
+    public void testEquals_NullObject_ShouldReturnFalse() {
+        User user = new User("testuser", "password", "test@example.com");
+        assertFalse(user.equals(null));
+    }
+
+    @Test
+    public void testEquals_DifferentClass_ShouldReturnFalse() {
+        User user = new User("testuser", "password", "test@example.com");
+        assertFalse(user.equals(new Object()));
+    }
+
+    @Test
+    public void testEquals_EqualObjects_ShouldReturnTrue() {
+        User user1 = new User("testuser", "password", "test@example.com");
+        User user2 = new User("testuser", "password", "test@example.com");
+        assertTrue(user1.equals(user2));
+    }
+
+    @Test
+    public void testEquals_DifferentUsername_ShouldReturnFalse() {
+        User user1 = new User("user1", "password", "test@example.com");
+        User user2 = new User("user2", "password", "test@example.com");
+        assertFalse(user1.equals(user2));
+    }
+
+    @Test
+    public void testEquals_DifferentPassword_ShouldReturnFalse() {
+        User user1 = new User("testuser", "password1", "test@example.com");
+        User user2 = new User("testuser", "password2", "test@example.com");
+        assertFalse(user1.equals(user2));
+    }
+
+    @Test
+    public void testEquals_DifferentEmail_ShouldReturnFalse() {
+        User user1 = new User("testuser", "password", "email1@example.com");
+        User user2 = new User("testuser", "password", "email2@example.com");
+        assertFalse(user1.equals(user2));
+    }
+
+    // HashCode Tests
+    @Test
+    public void testHashCode_EqualObjects_ShouldHaveSameHashCode() {
+        User user1 = new User("testuser", "password", "test@example.com");
+        User user2 = new User("testuser", "password", "test@example.com");
+        assertEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    public void testHashCode_DifferentObjects_ShouldHaveDifferentHashCode() {
+        User user1 = new User("user1", "password", "test@example.com");
+        User user2 = new User("user2", "password", "test@example.com");
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_WithDuplicateUsernames_ShouldThrowException() {
+        List<User> users = List.of(
+                new User("user1", "password1"),
+                new User("user1", "password2") // Duplicate username
+        );
+        new UserRepository(users);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_WithDuplicateEmails_ShouldThrowException() {
+        List<User> users = List.of(
+                new User("user1", "password1", "email@example.com"),
+                new User("user2", "password2", "email@example.com") // Duplicate email
+        );
+        new UserRepository(users);
+    }
+
+    @Test
+    public void testGetUserByUsername_ShouldReturnUser() {
+        assertNotNull(repository.getUserByUsername("admin"));
+    }
+
+    @Test
+    public void testGetUserByUsername_ShouldReturnNullForInvalidUser() {
+        assertNull(repository.getUserByUsername("nonexistent"));
+    }
+
+    @Test
+    public void testGetUserByEmail_ShouldReturnUser() {
+        User user = repository.getUserByEmail("hasan@gmail.com");
+        assertNotNull(user);
+        assertEquals("hasan", user.getUsername());
+    }
+
+    @Test
+    public void testGetUserByEmail_ShouldReturnNullForInvalidEmail() {
+        User user = repository.getUserByEmail("invalid@example.com");
+        assertNull(user);
+    }
+
+    @Test
+    public void getAllUsers_ShouldReturnAllRegisteredUsers() {
+        List<User> users = repository.getAllUsers();
+
+        assertNotNull(users);
+        assertEquals(3, users.size());
+        assertTrue(users.stream().anyMatch(user -> user.getUsername().equals("admin")));
+        assertTrue(users.stream().anyMatch(user -> user.getUsername().equals("ali")));
+        assertTrue(users.stream().anyMatch(user -> user.getUsername().equals("hasan")));
+    }
+
+    @Test
+    public void removeUser_ShouldSuccess() {
+        assertTrue(repository.removeUser("ali"));
+        assertNull(repository.getUserByUsername("ali"));
+    }
+
+    @Test
+    public void removeUser_NonExistingUser_ShouldFail() {
+        assertFalse(repository.removeUser("nonexistent"));
+    }
+
+    @Test
+    public void afterRemovingAUser_UserCountShouldDecrease() {
+        int initialCount = repository.getUserCount();
+        repository.removeUser("ali");
+        assertEquals(initialCount - 1, repository.getUserCount());
     }
 }
