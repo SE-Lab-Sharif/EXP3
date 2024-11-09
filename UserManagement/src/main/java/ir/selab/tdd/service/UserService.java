@@ -26,11 +26,17 @@ public class UserService {
     }
 
     public boolean registerUser(String username, String password) {
+        if (username == null || username.trim().isEmpty() || password == null) {
+            return false;
+        }
         User user = new User(username, password);
         return repository.addUser(user);
     }
 
     public boolean registerUser(String username, String password, String email) {
+        if (username == null || username.trim().isEmpty() || password == null || email == null || email.trim().isEmpty()) {
+            return false;
+        }
         User user = new User(username, password);
         user.setEmail(email);
         return repository.addUser(user);

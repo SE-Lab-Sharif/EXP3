@@ -23,125 +23,177 @@ public class UserServiceTest {
     }
 
     @Test
-    public void createNewValidUser__ShouldSuccess() {
-        String username = "reza";
-        String password = "123abc";
-        boolean b = userService.registerUser(username, password);
-        assertTrue(b);
+    public void createNewValidUser_ShouldSuccess() {
+        boolean result = userService.registerUser("reza", "123abc");
+        assertTrue(result);
     }
 
     @Test
-    public void createNewDuplicateUser__ShouldFail() {
-        String username = "ali";
-        String password = "123abc";
-        boolean b = userService.registerUser(username, password);
-        assertFalse(b);
+    public void createNewDuplicateUser_ShouldFail() {
+        boolean result = userService.registerUser("ali", "123abc");
+        assertFalse(result);
     }
 
     @Test
-    public void loginWithValidUsernameAndPassword__ShouldSuccess() {
-        boolean login = userService.loginWithUsername("admin", "1234");
-        assertTrue(login);
+    public void registerUser_WithNullUsername_ShouldReturnFalse() {
+        assertFalse(userService.registerUser(null, "password"));
     }
 
     @Test
-    public void loginWithValidUsernameAndInvalidPassword__ShouldFail() {
-        boolean login = userService.loginWithUsername("admin", "abcd");
-        assertFalse(login);
+    public void registerUser_WithEmptyUsername_ShouldReturnFalse() {
+        assertFalse(userService.registerUser("", "password"));
     }
 
     @Test
-    public void loginWithInvalidUsernameAndInvalidPassword__ShouldFail() {
-        boolean login = userService.loginWithUsername("ahmad", "abcd");
-        assertFalse(login);
+    public void registerUser_WithSpacesOnlyUsername_ShouldReturnFalse() {
+        assertFalse(userService.registerUser("   ", "password"));
     }
 
     @Test
-    public void loginWithValidEmailAndPassword__ShouldSuccess() {
-        boolean login = userService.loginWithEmail("hasan@gmail.com", "hasan123@");
-        assertTrue(login);
+    public void registerUser_WithNullPassword_ShouldReturnFalse() {
+        assertFalse(userService.registerUser("username", null));
     }
 
     @Test
-    public void loginWithValidEmailAndInvalidPassword__ShouldFail() {
-        boolean login = userService.loginWithEmail("hasan@gmail.com", "abcd");
-        assertFalse(login);
+    public void registerUser_WithValidUsernamePasswordAndEmail_ShouldReturnTrue() {
+        assertTrue(userService.registerUser("newuser", "password", "newuser@example.com"));
     }
 
     @Test
-    public void loginWithInvalidEmailAndInvalidPassword__ShouldFail() {
-        boolean login = userService.loginWithEmail("admin@admin.edu", "abcd");
-        assertFalse(login);
+    public void registerUser_WithNullEmail_ShouldReturnFalse() {
+        assertFalse(userService.registerUser("newuser", "password", null));
     }
 
     @Test
-    public void removeUser__ShouldSuccess() {
-        boolean b = userService.removeUser("ali");
-        assertTrue(b);
+    public void registerUser_WithEmptyEmail_ShouldReturnFalse() {
+        assertFalse(userService.registerUser("newuser", "password", ""));
     }
 
     @Test
-    public void removeUser__ShouldFail() {
-        boolean b = userService.removeUser("hasanGholi");
-        assertFalse(b);
+    public void registerUser_WithSpacesOnlyEmail_ShouldReturnFalse() {
+        assertFalse(userService.registerUser("newuser", "password", "   "));
     }
 
     @Test
-    public void removeUserShouldDeleteUserFromRepository() {
+    public void loginWithValidUsernameAndPassword_ShouldSuccess() {
+        assertTrue(userService.loginWithUsername("admin", "1234"));
+    }
+
+    @Test
+    public void loginWithValidUsernameAndInvalidPassword_ShouldFail() {
+        assertFalse(userService.loginWithUsername("admin", "abcd"));
+    }
+
+    @Test
+    public void loginWithInvalidUsername_ShouldFail() {
+        assertFalse(userService.loginWithUsername("ahmad", "abcd"));
+    }
+
+    @Test
+    public void loginWithNullUsername_ShouldFail() {
+        assertFalse(userService.loginWithUsername(null, "abcd"));
+    }
+
+    @Test
+    public void loginWithValidEmailAndPassword_ShouldSuccess() {
+        assertTrue(userService.loginWithEmail("hasan@gmail.com", "hasan123@"));
+    }
+
+    @Test
+    public void loginWithInvalidEmail_ShouldFail() {
+        assertFalse(userService.loginWithEmail("invalid@example.com", "password"));
+    }
+
+    @Test
+    public void loginWithNullEmail_ShouldFail() {
+        assertFalse(userService.loginWithEmail(null, "password"));
+    }
+
+    @Test
+    public void removeUser_ShouldSuccess() {
+        assertTrue(userService.removeUser("ali"));
+    }
+
+    @Test
+    public void removeUser_NonExistingUser_ShouldFail() {
+        assertFalse(userService.removeUser("nonexistent"));
+    }
+
+    @Test
+    public void afterRemovingAUser_UserCountShouldDecrease() {
+        int initialCount = userService.getUserCount();
         userService.removeUser("ali");
-        assertNull(userService.getUserByUsername("ali"));
+        assertEquals(initialCount - 1, userService.getUserCount());
     }
 
     @Test
-    public void removeUserWithInvalidUsername__ShouldFail() {
-        boolean b = userService.removeUser("ahmad");
-        assertFalse(b);
-    }
-
-    @Test
-    public void afterRemovingAUser__UserCountShouldDecrease() {
-        int userCount = userService.getUserCount();
-        userService.removeUser("ali");
-        assertEquals(userService.getUserCount(), userCount - 1);
-    }
-
-    @Test
-    public void changeUserEmail__ShouldCreateNewEmailAddress__IfPrevEmailDoesNotExist() {
-        boolean b = userService.changeUserEmail("admin", "admin@corp.co");
-        assertTrue(b);
-    }
-
-    @Test
-    public void changeUserEmail__CheckEmailIsCreated() {
-        userService.changeUserEmail("admin", "admin@corp.co");
+    public void changeUserEmail_ShouldSucceedForNewEmail() {
+        assertTrue(userService.changeUserEmail("admin", "admin@corp.co"));
         assertNotNull(userService.getUserByEmail("admin@corp.co"));
     }
 
     @Test
-    public void changeUserEmail__ShouldChangeEmail__IfPrevEmailExists() {
-        boolean b = userService.changeUserEmail("hasan", "hasan@yahoo.com");
-        assertTrue(b);
+    public void changeUserEmail_ShouldFailForDuplicateEmail() {
+        assertFalse(userService.changeUserEmail("admin", "hasan@gmail.com"));
     }
 
     @Test
-    public void changeUserEmail__CheckEmailIsChanged() {
+    public void changeUserEmail_ShouldAllowLoginWithNewEmail() {
         userService.changeUserEmail("hasan", "hasan@yahoo.com");
-        assertNull(userService.getUserByEmail("hasan@gmail.com"));
-        assertNotNull(userService.getUserByEmail("hasan@yahoo.com"));
+        assertTrue(userService.loginWithEmail("hasan@yahoo.com", "hasan123@"));
     }
 
     @Test
-    public void changeUserEmail__AfterChange__ShouldBeAbleToLoginWithNewEmail() {
-        userService.changeUserEmail("hasan", "hasan@yahoo.com");
-        boolean login = userService.loginWithEmail("hasan@yahoo.com", "hasan123@");
-        assertTrue(login);
+    public void changeUserEmail_UserExistsAndNewEmailIsValid_ShouldReturnTrue() {
+        boolean result = userService.changeUserEmail("admin", "admin_new@example.com");
+
+        assertTrue(result);
+        User updatedUser = userService.getUserByEmail("admin_new@example.com");
+        assertNotNull(updatedUser);
+        assertEquals("admin", updatedUser.getUsername());
     }
 
     @Test
-    public void changeUserEmail__RepetitiveEmail__ShouldFail() {
-        userService.changeUserEmail("hasan", "hasan@yahoo.com");
-        boolean b = userService.changeUserEmail("admin", "hasan@yahoo.com");
-        assertFalse(b);
+    public void changeUserEmail_UserDoesNotExist_ShouldReturnFalse() {
+        boolean result = userService.changeUserEmail("nonexistent", "nonexistent@example.com");
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void changeUserEmail_NewEmailAlreadyExists_ShouldReturnFalse() {
+        userService.registerUser("user1", "password", "existing@example.com");
+
+        boolean result = userService.changeUserEmail("admin", "existing@example.com");
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void changeUserEmail_NewEmailIsSameAsCurrentEmail_ShouldReturnFalse() {
+        boolean result = userService.changeUserEmail("hasan", "hasan@gmail.com");
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void changeUserEmail_UserExistsAndEmailIsChanged_ShouldAllowLoginWithNewEmail() {
+        boolean result = userService.changeUserEmail("hasan", "hasan_new@example.com");
+
+        assertTrue(result);
+        assertTrue(userService.loginWithEmail("hasan_new@example.com", "hasan123@"));
+        assertFalse(userService.loginWithEmail("hasan@gmail.com", "hasan123@"));
+    }
+
+    @Test
+    public void registerUser_WithInvalidInputs_ShouldReturnFalse() {
+        assertFalse(userService.registerUser(null, "password", "email@example.com")); // Null username
+        assertFalse(userService.registerUser("", "password", "email@example.com"));   // Empty username
+        assertFalse(userService.registerUser("   ", "password", "email@example.com")); // Spaces-only username
+        assertFalse(userService.registerUser("username", null, "email@example.com")); // Null password
+        assertFalse(userService.registerUser("username", "password", null));          // Null email
+        assertFalse(userService.registerUser("username", "password", ""));            // Empty email
+        assertFalse(userService.registerUser("username", "password", "   "));         // Spaces-only email
     }
 
 }
